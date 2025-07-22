@@ -8,13 +8,18 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("🧴 Продукты")
-    btn2 = types.KeyboardButton("🎁 Акции")
-    btn3 = types.KeyboardButton("📝 Как зарегистрироваться")
-    btn4 = types.KeyboardButton("📞 Связаться с консультантом")
-    markup.add(btn1, btn2)
-    markup.add(btn3, btn4)
-    bot.send_message(message.chat.id, "Добро пожаловать в мир здоровья с Siberian Wellness! Выберите раздел:", reply_markup=markup)
+    btn1 = types.KeyboardButton("🤝 Сотрудничество")
+    btn2 = types.KeyboardButton("🧴 Продукты")
+    btn3 = types.KeyboardButton("🎁 Акции")
+    btn4 = types.KeyboardButton("📍 Контактная информация")
+    markup.add(btn1)
+    markup.add(btn2, btn3)
+    markup.add(btn4)
+    bot.send_message(
+        message.chat.id,
+        "Добро пожаловать в мир здоровья с Siberian Wellness! Выберите раздел:",
+        reply_markup=markup
+    )
 
 @bot.message_handler(func=lambda message: True)
 def respond(message):
@@ -22,10 +27,21 @@ def respond(message):
         bot.send_message(message.chat.id, "🌿 Ознакомьтесь с каталогом продуктов на сайте:\nhttps://kg.siberianhealth.com/ru/")
     elif message.text == "🎁 Акции":
         bot.send_message(message.chat.id, "🎉 Актуальные акции:\nhttps://kg.siberianhealth.com/ru/shop/actions/")
-    elif message.text == "📝 Как зарегистрироваться":
-        bot.send_message(message.chat.id, "Чтобы зарегистрироваться:\n1. Перейдите на сайт: https://kg.siberianhealth.com/\n2. Нажмите 'Регистрация'\n3. Заполните анкету\n4. Укажите ID вашего консультанта (если есть)")
-    elif message.text == "📞 Связаться с консультантом":
-        bot.send_message(message.chat.id, "📲 Вы можете написать вашему консультанту или в службу поддержки:\nEmail: support@siberianwellness.com\nТелефон: +996 *** *** ***")
+    elif message.text == "📍 Контактная информация":
+        bot.send_message(message.chat.id,
+            "📞 Телефоны:\n"
+            "0558 995 985\n0555 945 794\n0550 724 280\n\n"
+            "🏢 Адрес:\n"
+            "ул. Суеркулова 8/3,\nпри клинике «Семья и здоровье»,\nпервое крыльцо\n\n"
+            "🗺️ Карта:\nhttps://go.2gis.com/qukcy"
+        )
+    elif message.text == "🤝 Сотрудничество":
+        bot.send_message(message.chat.id,
+            "💼 Хочешь зарабатывать вместе с Siberian Wellness?\n"
+            "Стань партнёром бренда, развивай свой онлайн-бизнес, получай бонусы и поддержку.\n\n"
+            "📲 Присоединяйся по ссылке:\n"
+            "https://kg.siberianhealth.com/ru/shop/user/registration/PRIVILEGED_CLIENT/?referral=6752908"
+        )
     else:
         bot.send_message(message.chat.id, "Пожалуйста, выберите действие из меню.")
 
