@@ -2,48 +2,172 @@ import telebot
 from telebot import types
 import os
 
+# 🔒 Токен берется из переменной окружения
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
+user_messages = {}
+
+def main_menu():
+    markup = types.InlineKeyboardMarkup()
+    markup.add(
+        types.InlineKeyboardButton("💰 Кэшбек, скидки и подарки", callback_data="cooperation"),
+        types.InlineKeyboardButton("🧴 Продукция", callback_data="products")
+    )
+    markup.add(
+        types.InlineKeyboardButton("🎁 Акции", callback_data="promotions"),
+        types.InlineKeyboardButton("📍 Контактная информация", callback_data="contacts")
+    )
+    markup.add(
+        types.InlineKeyboardButton(
+            "NUTRITION FITCHA — тест для подбора витаминов",
+            callback_data="nutrition_fitcha"
+        )
+    )
+    markup.add(
+        types.InlineKeyboardButton(
+            'Перезагрузка бота (или отправьте "/start")',
+            callback_data="start_virtual"
+        )
+    )
+    return markup
+
+def promo_menu():
+    markup = types.InlineKeyboardMarkup()
+    markup.add(
+        types.InlineKeyboardButton("📅 Недельные акции", callback_data="promo_week"),
+        types.InlineKeyboardButton("🗓 Месячные акции", callback_data="promo_month")
+    )
+    markup.add(
+        types.InlineKeyboardButton("⬅️ Назад", callback_data="back_main"),
+        types.InlineKeyboardButton(
+            'Перезагрузка бота (или отправьте "/start")',
+            callback_data="start_virtual"
+        )
+    )
+    return markup
+
+def clear_chat(chat_id):
+    if chat_id in user_messages:
+        for msg_id in user_messages[chat_id]:
+            try:
+                bot.delete_message(chat_id, msg_id)
+            except:
+                pass
+        user_messages[chat_id] = []
+
+def send_media_group(chat_id, photos, caption):
+    clear_chat(chat_id)
+    media = [types.InputMediaPhoto(media=photo) for photo in photos]
+    msgs = bot.send_media_group(chat_id, media)
+    user_messages[chat_id] = [m.message_id for m in msgs]
+    msg = bot.send_message(chat_id, caption, reply_markup=promo_menu())
+    user_messages[chat_id].append(msg.message_id)
+
 @bot.message_handler(commands=['start'])
 def start(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("🤝 Сотрудничество")
-    btn2 = types.KeyboardButton("🧴 Продукты")
-    btn3 = types.KeyboardButton("🎁 Акции")
-    btn4 = types.KeyboardButton("📍 Контактная информация")
-    markup.add(btn1)
-    markup.add(btn2, btn3)
-    markup.add(btn4)
-    bot.send_message(
+    clear_chat(message.chat.id)
+    msg = bot.send_message(
         message.chat.id,
-        "Добро пожаловать в мир здоровья с Siberian Wellness! Выберите раздел:",
-        reply_markup=markup
+        "Добро пожаловать в мир здоровья с Siberian Wellness!\nВыберите раздел ниже 👇",
+        reply_markup=main_menu()
     )
+    user_messages[message.chat.id] = [msg.message_id]
 
-@bot.message_handler(func=lambda message: True)
-def respond(message):
-    if message.text == "🧴 Продукты":
-        bot.send_message(message.chat.id, "🌿 Ознакомьтесь с каталогом продуктов на сайте:\nhttps://kg.siberianhealth.com/ru/")
-    elif message.text == "🎁 Акции":
-        bot.send_message(message.chat.id, "🎉 Актуальные акции:\nhttps://kg.siberianhealth.com/ru/shop/actions/")
-    elif message.text == "📍 Контактная информация":
-        bot.send_message(message.chat.id,
-            "📞 Телефоны:\n"
-            "0550 724 280\n0555 945 794\n0558 995 985\n\n"
-            "🏢 Адрес:\n"
-            "ул. Суеркулова 8/3,\nпри клинике «Семья и здоровье»,\nпервое крыльцо\n\n"
-            "🗺️ Карта:\nhttps://go.2gis.com/qukcy"
-        )
-    elif message.text == "🤝 Сотрудничество":
-        bot.send_message(message.chat.id,
-            "💼 Хочешь зарабатывать вместе с Siberian Wellness?\n"
-            "Стань партнёром бренда, развивай свой онлайн-бизнес, получай бонусы и поддержку.\n\n"
-            "📲 Присоединяйся по ссылке:\n"
-            "https://kg.siberianhealth.com/ru/shop/user/registration/PRIVILEGED_CLIENT/?referral=6752908"
-        )
-    else:
-        bot.send_message(message.chat.id, "Пожалуйста, выберите действие из меню.")
+@bot.callback_query_handler(func=lambda call: True)
+def callback_handler(call):
+    chat_id = call.message.chat.id
+    try:
+        if call.data == "start_virtual":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "Добро пожаловать в мир здоровья с Siberian Wellness!\nВыберите раздел ниже 👇",
+                reply_markup=main_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
 
-bot.polling(none_stop=True)
+        elif call.data == "cooperation":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "💰 Кэшбек, скидки и подарки Siberian Wellness!\n"
+                "Получайте бонусы, скидки и подарки за покупки. Станьте привилегированным клиентом:\n"
+                "https://kg.siberianhealth.com/ru/shop/user/registration/PRIVILEGED_CLIENT/?referral=6752908",
+                reply_markup=main_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
 
+        elif call.data == "products":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "🌿 Ознакомьтесь с каталогом продукции:\nhttps://kg.siberianhealth.com/ru/",
+                reply_markup=main_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
+
+        elif call.data == "nutrition_fitcha":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "NUTRITION FITCHA — тест для подбора витаминов\n"
+                "Автоматизированный сервис по подбору витаминов и других жизненно важных микронутриентов.\n\n"
+                "Пройдите профессиональную консультацию бесплатно. Узнайте все о своих дефицитах и получите рекомендации.\n"
+                "https://ru.siberianhealth.com/ru/fitcha/nutrilogic/",
+                reply_markup=main_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
+
+        elif call.data == "promotions":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "🎁 Выберите категорию акций:",
+                reply_markup=promo_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
+
+        elif call.data == "contacts":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "📞 Телефоны:\n0550 724 280\n0555 945 794\n0558 995 985\n\n"
+                "🏢 Адрес:\nул. Суеркулова 8/3,\nпри клинике «Семья и здоровье», первое крыльцо\n\n"
+                "🗺 Карта:\nhttps://go.2gis.com/qukcy",
+                reply_markup=main_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
+
+        elif call.data == "promo_week":
+            photos_week = [
+                "https://i.postimg.cc/SNwkM8c9/image-week-jpg-1.png",
+                "https://i.postimg.cc/YqdPTmpY/1760261121238-1.png",
+                "https://i.postimg.cc/02k3tCq0/1760261121238-2.png"
+            ]
+            send_media_group(chat_id, photos_week, "📅 Недельные акции Siberian Wellness 🌿")
+
+        elif call.data == "promo_month":
+            photos_month = [
+                "https://i.postimg.cc/SK2fTnsV/1760260793587.jpg",
+                "https://i.postimg.cc/MGMmPnT5/1760260793589.jpg",
+                "https://i.postimg.cc/jjw4gD54/1760260799127.jpg",
+                "https://i.postimg.cc/N09kJKMp/1760260799502.jpg"
+            ]
+            send_media_group(chat_id, photos_month, "🗓 Месячные акции Siberian Wellness 🎉")
+
+        elif call.data == "back_main":
+            clear_chat(chat_id)
+            msg = bot.send_message(
+                chat_id,
+                "Добро пожаловать в главное меню 👇",
+                reply_markup=main_menu()
+            )
+            user_messages[chat_id] = [msg.message_id]
+
+    except Exception as e:
+        print("⚠️ Ошибка:", e)
+
+if __name__ == "__main__":
+    print("🤖 Бот запущен и слушает команды...")
+    bot.polling(none_stop=True, interval=0, timeout=20)
