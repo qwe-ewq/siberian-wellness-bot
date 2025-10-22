@@ -11,7 +11,7 @@ user_messages = {}
 def main_menu():
     markup = types.InlineKeyboardMarkup()
     markup.add(
-        types.InlineKeyboardButton("💰 Кэшбек, скидки и подарки", callback_data="cooperation"),
+        types.InlineKeyboardButton("💰 Кэшбек, скидки и подарки1", callback_data="cooperation"),
         types.InlineKeyboardButton("🧴 Продукция", callback_data="products")
     )
     markup.add(
@@ -170,5 +170,6 @@ def callback_handler(call):
 if __name__ == "__main__":
     print("🤖 Бот запущен и слушает команды...")
     bot.polling(none_stop=True, interval=0, timeout=20)
+
 
 
