@@ -18,12 +18,8 @@ def main_menu():
         types.InlineKeyboardButton("📍 Контактная информация", callback_data="contacts"),
         types.InlineKeyboardButton("🧬 Тест NUTRITION FITCHA", callback_data="nutrition_fitcha")
     )
-    # 🔁 Большая, короткая кнопка, чтобы весь текст влезал на экран телефона
     markup.add(
-        types.InlineKeyboardButton(
-            "🔄 Перезагрузка бота",
-            callback_data="start_virtual"
-        )
+        types.InlineKeyboardButton("🔄 Перезагрузка бота", callback_data="start_virtual")
     )
     return markup
 
@@ -37,10 +33,7 @@ def promo_menu():
         types.InlineKeyboardButton("⬅️ Назад", callback_data="back_main")
     )
     markup.add(
-        types.InlineKeyboardButton(
-            "🔄 Перезагрузка бота",
-            callback_data="start_virtual"
-        )
+        types.InlineKeyboardButton("🔄 Перезагрузка бота", callback_data="start_virtual")
     )
     return markup
 
@@ -91,6 +84,11 @@ def callback_handler(call):
 
         elif call.data == "cooperation":
             clear_chat(chat_id)
+            # 🖼 Отправляем фото перед текстом
+            photo_msg = bot.send_photo(
+                chat_id,
+                "https://i.postimg.cc/yN8W5MQc/photo-2025-10-30-00-15-22.jpg"
+            )
             msg = bot.send_message(
                 chat_id,
                 "💰 Кэшбек, скидки и подарки Siberian Wellness!\n"
@@ -99,7 +97,7 @@ def callback_handler(call):
                 "💬 Или просто отправьте /start в чат, чтобы начать заново.",
                 reply_markup=main_menu()
             )
-            user_messages[chat_id] = [msg.message_id]
+            user_messages[chat_id] = [photo_msg.message_id, msg.message_id]
 
         elif call.data == "nutrition_fitcha":
             clear_chat(chat_id)
