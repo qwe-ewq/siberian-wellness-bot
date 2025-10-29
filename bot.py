@@ -9,39 +9,36 @@ bot = telebot.TeleBot(TOKEN)
 user_messages = {}
 
 def main_menu():
-    markup = types.InlineKeyboardMarkup()
+    markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
-        types.InlineKeyboardButton("💰 Кэшбек, скидки и подарки1", callback_data="cooperation"),
-        types.InlineKeyboardButton("🧴 Продукция", callback_data="products")
+        types.InlineKeyboardButton("💰 Кэшбек, скидки и подарки", callback_data="cooperation"),
+        types.InlineKeyboardButton("🎁 Акции", callback_data="promotions")
     )
     markup.add(
-        types.InlineKeyboardButton("🎁 Акции", callback_data="promotions"),
-        types.InlineKeyboardButton("📍 Контактная информация", callback_data="contacts")
+        types.InlineKeyboardButton("📍 Контактная информация", callback_data="contacts"),
+        types.InlineKeyboardButton("🧬 Тест NUTRITION FITCHA", callback_data="nutrition_fitcha")
     )
+    # 🔁 Большая, короткая кнопка, чтобы весь текст влезал на экран телефона
     markup.add(
         types.InlineKeyboardButton(
-            "NUTRITION FITCHA — тест для подбора витаминов",
-            callback_data="nutrition_fitcha"
-        )
-    )
-    markup.add(
-        types.InlineKeyboardButton(
-            'Перезагрузка бота (или отправьте "/start")',
+            "🔄 Перезагрузка бота",
             callback_data="start_virtual"
         )
     )
     return markup
 
 def promo_menu():
-    markup = types.InlineKeyboardMarkup()
+    markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
         types.InlineKeyboardButton("📅 Недельные акции", callback_data="promo_week"),
         types.InlineKeyboardButton("🗓 Месячные акции", callback_data="promo_month")
     )
     markup.add(
-        types.InlineKeyboardButton("⬅️ Назад", callback_data="back_main"),
+        types.InlineKeyboardButton("⬅️ Назад", callback_data="back_main")
+    )
+    markup.add(
         types.InlineKeyboardButton(
-            'Перезагрузка бота (или отправьте "/start")',
+            "🔄 Перезагрузка бота",
             callback_data="start_virtual"
         )
     )
@@ -69,7 +66,9 @@ def start(message):
     clear_chat(message.chat.id)
     msg = bot.send_message(
         message.chat.id,
-        "Добро пожаловать в мир здоровья с Siberian Wellness!\nВыберите раздел ниже 👇",
+        "Добро пожаловать в мир здоровья с Siberian Wellness!\n"
+        "Выберите раздел ниже 👇\n\n"
+        "💬 Или просто отправьте /start в чат, чтобы начать заново.",
         reply_markup=main_menu()
     )
     user_messages[message.chat.id] = [msg.message_id]
@@ -82,7 +81,10 @@ def callback_handler(call):
             clear_chat(chat_id)
             msg = bot.send_message(
                 chat_id,
-                "Добро пожаловать в мир здоровья с Siberian Wellness!\nВыберите раздел ниже 👇",
+                "🔄 Перезапуск бота...\n\n"
+                "Добро пожаловать в мир здоровья с Siberian Wellness!\n"
+                "Выберите раздел ниже 👇\n\n"
+                "💬 Или просто отправьте /start в чат, чтобы начать заново.",
                 reply_markup=main_menu()
             )
             user_messages[chat_id] = [msg.message_id]
@@ -93,16 +95,8 @@ def callback_handler(call):
                 chat_id,
                 "💰 Кэшбек, скидки и подарки Siberian Wellness!\n"
                 "Получайте бонусы, скидки и подарки за покупки. Станьте привилегированным клиентом:\n"
-                "https://kg.siberianhealth.com/ru/shop/user/registration/PRIVILEGED_CLIENT/?referral=6752908",
-                reply_markup=main_menu()
-            )
-            user_messages[chat_id] = [msg.message_id]
-
-        elif call.data == "products":
-            clear_chat(chat_id)
-            msg = bot.send_message(
-                chat_id,
-                "🌿 Ознакомьтесь с каталогом продукции:\nhttps://kg.siberianhealth.com/ru/",
+                "https://kg.siberianhealth.com/ru/shop/user/registration/PRIVILEGED_CLIENT/?referral=6752908\n\n"
+                "💬 Или просто отправьте /start в чат, чтобы начать заново.",
                 reply_markup=main_menu()
             )
             user_messages[chat_id] = [msg.message_id]
@@ -111,10 +105,11 @@ def callback_handler(call):
             clear_chat(chat_id)
             msg = bot.send_message(
                 chat_id,
-                "NUTRITION FITCHA — тест для подбора витаминов\n"
+                "🧬 NUTRITION FITCHA — тест для подбора витаминов\n"
                 "Автоматизированный сервис по подбору витаминов и других жизненно важных микронутриентов.\n\n"
-                "Пройдите профессиональную консультацию бесплатно. Узнайте все о своих дефицитах и получите рекомендации.\n"
-                "https://ru.siberianhealth.com/ru/fitcha/nutrilogic/",
+                "Пройдите консультацию бесплатно и получите рекомендации:\n"
+                "https://ru.siberianhealth.com/ru/fitcha/nutrilogic/\n\n"
+                "💬 Или просто отправьте /start в чат, чтобы начать заново.",
                 reply_markup=main_menu()
             )
             user_messages[chat_id] = [msg.message_id]
@@ -134,15 +129,15 @@ def callback_handler(call):
                 chat_id,
                 "📞 Телефоны:\n0550 724 280\n0555 945 794\n0558 995 985\n\n"
                 "🏢 Адрес:\nул. Суеркулова 8/3,\nпри клинике «Семья и здоровье», первое крыльцо\n\n"
-                "🗺 Карта:\nhttps://go.2gis.com/qukcy",
+                "🗺 Карта:\nhttps://go.2gis.com/qukcy\n\n"
+                "💬 Или просто отправьте /start в чат, чтобы начать заново.",
                 reply_markup=main_menu()
             )
             user_messages[chat_id] = [msg.message_id]
 
         elif call.data == "promo_week":
             photos_week = [
-                "https://i.postimg.cc/kXGxzpkg/Whats-App-Image-2025-10-21-at-15-38-26.jpg",
-                "https://i.postimg.cc/fTyxpr6f/Whats-App-Image-2025-10-21-at-15-38-27.jpg"
+                "https://i.postimg.cc/rp3Z3kV3/Whats-App-Image-2025-10-28-at-14-42-09.jpg"
             ]
             send_media_group(chat_id, photos_week, "📅 Недельные акции Siberian Wellness 🌿")
 
@@ -159,7 +154,8 @@ def callback_handler(call):
             clear_chat(chat_id)
             msg = bot.send_message(
                 chat_id,
-                "Добро пожаловать в главное меню 👇",
+                "Добро пожаловать в главное меню 👇\n\n"
+                "💬 Или просто отправьте /start в чат, чтобы начать заново.",
                 reply_markup=main_menu()
             )
             user_messages[chat_id] = [msg.message_id]
@@ -170,6 +166,3 @@ def callback_handler(call):
 if __name__ == "__main__":
     print("🤖 Бот запущен и слушает команды...")
     bot.polling(none_stop=True, interval=0, timeout=20)
-
-
-
