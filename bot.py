@@ -135,14 +135,14 @@ def callback_handler(call):
 
         elif call.data == "promo_week":
             photos_week = [
-                "https://i.postimg.cc/mr0LhrxQ/week-Whats-App-Image-2025-12-02-at-12-21-03.jpg"
+                "https://i.postimg.cc/MGFsPNTz/Whats-App-Image-2025-12-08-at-10-10-18.jpg",
+                "https://i.postimg.cc/q75mbSR6/Whats-App-Image-2025-12-08-at-10-10-18-(2).jpg"
             ]
             send_media_group(chat_id, photos_week, "📅 Недельные акции Siberian Wellness 🌿")
 
         elif call.data == "promo_month":
             photos_month = [
-                "https://i.postimg.cc/MGFsPNTz/Whats-App-Image-2025-12-08-at-10-10-18.jpg",
-                "https://i.postimg.cc/q75mbSR6/Whats-App-Image-2025-12-08-at-10-10-18-(2).jpg"
+                "https://i.postimg.cc/0jqhnFWc/ecoshop-siberianwellness-kg-1765226451771.jpg"
             ]
             send_media_group(chat_id, photos_month, "🗓 Месячные акции Siberian Wellness 🎉")
 
