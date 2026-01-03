@@ -135,13 +135,17 @@ def callback_handler(call):
 
         elif call.data == "promo_week":
             photos_week = [
-                "https://i.postimg.cc/Sxtt4vWh/94f8f5b0-2dd6-42fd-afaa-418daa602e52.jpg"
+                "https://i.postimg.cc/hGLrvcPh/Whats-App-Image-2026-01-03-at-14-26-39.jpg",
+                "https://i.postimg.cc/pTPBn4pX/Whats-App-Image-2026-01-03-at-14-26-39-(1).jpg",
+                "https://i.postimg.cc/0Q9CJFb5/Whats-App-Image-2026-01-03-at-14-26-40.jpg"
             ]
             send_media_group(chat_id, photos_week, "📅 Недельные акции Siberian Wellness 🌿")
 
         elif call.data == "promo_month":
             photos_month = [
-                "https://i.postimg.cc/0jqhnFWc/ecoshop-siberianwellness-kg-1765226451771.jpg"
+                "https://i.postimg.cc/jdnyCtZ4/Whats-App-Image-2026-01-03-at-14-26-43.jpg",
+                "https://i.postimg.cc/wjhJcFK1/Whats-App-Image-2026-01-03-at-14-26-41.jpg",
+                "https://i.postimg.cc/xd5zBC1S/Whats-App-Image-2026-01-03-at-14-26-42.jpg"
             ]
             send_media_group(chat_id, photos_month, "🗓 Месячные акции Siberian Wellness 🎉")
 
@@ -161,6 +165,7 @@ def callback_handler(call):
 if __name__ == "__main__":
     print("🤖 Бот запущен и слушает команды...")
     bot.polling(none_stop=True, interval=0, timeout=20)
+
 
 
 
