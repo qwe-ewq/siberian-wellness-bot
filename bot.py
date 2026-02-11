@@ -169,7 +169,8 @@ def callback_handler(call):
 
         elif call.data == "promo_week":
             photos_week = [
-                "https://i.postimg.cc/m2mTPD2W/Whats-App-Image-2026-02-02-at-12-49-27.jpg"
+                "https://i.postimg.cc/Y0zYWSQ9/Whats-App-Image-2026-02-11-at-14-30-39.jpg",
+                "https://i.postimg.cc/59gXLTZ3/Whats-App-Image-2026-02-11-at-14-30-40.jpg"
             ]
 
             send_media_group(
@@ -211,6 +212,7 @@ def callback_handler(call):
 if __name__ == "__main__":
     print("🤖 Бот запущен и слушает команды...")
     bot.polling(none_stop=True, interval=0, timeout=20)
+
 
 
 
